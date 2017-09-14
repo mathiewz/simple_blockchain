@@ -34,7 +34,7 @@ Block<Long> block = node.getBlockChain();
 block.getData();
 ```
 
-###Get latest block
+### Get latest block
 ```java
 Block<MyDataObject> latest = node.getBlockChain();
 ```

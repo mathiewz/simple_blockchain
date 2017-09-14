@@ -39,6 +39,12 @@ block.getData();
 Block<MyDataObject> latest = node.getBlockChain();
 ```
 
+### Add new Block to the chain
+```java
+MyDataObject data = new MyDataObject();
+node.addBlock(data);
+```
+
 ### Iterate through whole block chain
 
 All of the next cases iterate through the block sorted by creation date

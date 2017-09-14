@@ -16,14 +16,14 @@ To create a new Node, there are two possibilities :
 ```java
 // Create a new chain and is ready for new connections on port 8080
 int listeningPort = 8080;
-MyDataObject data = new MyDataObject()
+MyDataObject data = new MyDataObject();
 Node<MyDataObject> node = new Node<>(listeningPort, new Block<>(data));
 ```
 OR
 ```java
 //Connect to 192.168.0.1:8080, get the current chain and is ready for new connections on port 8080
 int listeningPort = 8080;
-String remoteHost = "192.168.0.1"
+String remoteHost = "192.168.0.1";
 int remotePort = 8080;
 Node<MyDataObject> node = new Node<>(listeningPort, remoteHost, remotePort);
 ```

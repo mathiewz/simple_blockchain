@@ -1,11 +1,16 @@
 # simple_blockchain
 A simple implementation of blokchain using java socket to communicate
 The blocks can contain any Object implementing Serializable as data.
-##Communication
+
+## Communication
+
 All the connections are peer to peer connection using java sockets.
 Each connection to another node aware of the blockchain will create a new Thread to both JVM connected.
-##Usage
-###create new node
+
+## Usage
+
+### create new node
+
 To create a new Node, there are two possibilities : 
 
 ```java
@@ -23,7 +28,7 @@ int remotePort = 8080;
 Node<MyDataObject> node = new Node<>(listeningPort, remoteHost, remotePort);
 ```
 
-###Get the data of a block
+### Get the data of a block
 ```java
 Block<Long> block = node.getBlockChain();
 block.getData();
@@ -34,17 +39,17 @@ block.getData();
 Block<MyDataObject> latest = node.getBlockChain();
 ```
 
-###Iterate through whole block chain
+### Iterate through whole block chain
 
 All of the next cases iterate through the block sorted by creation date
 
-####forEach
+#### orEach
 ```java
 for(Block<Long> block : node.getBlockChain()) {
         //Do some stuff
 }
 ```
-####Iterator
+#### Iterator
 ```java
 Iterator<Block<Long>> itr = node.getBlockChain().iterator();
 while (itr.hasNext()) {
@@ -53,20 +58,20 @@ while (itr.hasNext()) {
 }
 ```
 
-####Java 8 Stream API
+#### Java 8 Stream API
 ```java
 node.getBlockChain().stream().forEach(block -> {
    //Do somme stuff 
 });
 ```
 
-###Check the validity of a block
+### Check the validity of a block
 ```java
 Block<Long> block = node.getBlockChain();
 block.isValid();
 ```
 
-###Check the validity of the chain
+### Check the validity of the chain
 ```java
 Block<Long> block = node.getBlockChain();
 block.isWholeChainValid();

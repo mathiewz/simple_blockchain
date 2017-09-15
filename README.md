@@ -30,8 +30,8 @@ Node<MyDataObject> node = new Node<>(listeningPort, remoteHost, remotePort);
 
 ### Get the data of a block
 ```java
-Block<Long> block = node.getBlockChain();
-block.getData();
+Block<MyDataObject> block = node.getBlockChain();
+MyDataObject data = block.getData();
 ```
 
 ### Get latest block
@@ -51,15 +51,15 @@ All of the next cases iterate through the block sorted by creation date
 
 #### orEach
 ```java
-for(Block<Long> block : node.getBlockChain()) {
+for(Block<MyDataObject> block : node.getBlockChain()) {
         //Do some stuff
 }
 ```
 #### Iterator
 ```java
-Iterator<Block<Long>> itr = node.getBlockChain().iterator();
+Iterator<Block<MyDataObject>> itr = node.getBlockChain().iterator();
 while (itr.hasNext()) {
-    Block<Long> block = itr.next();
+    Block<MyDataObject> block = itr.next();
     //Do some stuff            
 }
 ```
@@ -73,12 +73,12 @@ node.getBlockChain().stream().forEach(block -> {
 
 ### Check the validity of a block
 ```java
-Block<Long> block = node.getBlockChain();
+Block<MyDataObject> block = node.getBlockChain();
 block.isValid();
 ```
 
 ### Check the validity of the chain
 ```java
-Block<Long> block = node.getBlockChain();
+Block<MyDataObject> block = node.getBlockChain();
 block.isWholeChainValid();
 ```

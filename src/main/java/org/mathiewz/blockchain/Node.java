@@ -21,20 +21,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Node<T extends Serializable> {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
-    
+
     private List<Socket> nodes = new ArrayList<>();
-    
+
     private Block<T> currentBlock;
-    
+
     public Node(int localPort, String remoteAdress, int remotePort) throws IOException, ClassNotFoundException {
         this(localPort, null);
         Socket socket = new Socket(remoteAdress, remotePort);
         nodes.add(socket);
         ask(socket);
     }
-    
+
     public Node(int port, Block<T> firstBlock) {
         LOGGER.info("I run on port {}", port);
         currentBlock = firstBlock;
@@ -53,20 +53,20 @@ public class Node<T extends Serializable> {
                 }
             }
         }.start();
-        
+
     }
-    
+
     public void addBlock(T value) throws IOException {
         currentBlock = new Block<>(value, currentBlock);
         emit(currentBlock);
     }
-    
+
     public void addNode(String remoteAdress, Integer remotePort) throws IOException, ClassNotFoundException {
         Socket socket = new Socket(remoteAdress, remotePort);
         nodes.add(socket);
         ask(socket);
     }
-    
+
     @SuppressWarnings("unchecked")
     private void ask(Socket socket) throws IOException, ClassNotFoundException {
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -80,22 +80,22 @@ public class Node<T extends Serializable> {
         ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
         receive((Block<T>) objectInputStream.readObject());
     }
-    
+
     private void receive(Block<T> block) throws IOException {
         LOGGER.info("recu bloc {}", block);
-        Block<T> newBlock = Block.mergeChains(currentBlock, block);
+        Block<T> newBlock = getBestChains(currentBlock, block);
         if (newBlock != currentBlock) {
             currentBlock = newBlock;
             emit(newBlock);
         }
     }
-    
+
     private void emit(Block<T> newBlock) throws IOException {
         for (Socket node : nodes) {
             send(node, newBlock);
         }
     }
-    
+
     private void send(Socket socket, Block<T> newBlock) throws IOException {
         if (socket.isClosed()) {
             nodes.remove(socket);
@@ -111,18 +111,18 @@ public class Node<T extends Serializable> {
         LOGGER.info("Send the blocks");
         byteArrayOutputStream.close();
     }
-    
+
     public Block<T> getBlockChain() {
         return currentBlock;
     }
-    
+
     private class NodeThread extends Thread {
         private Socket socket;
-        
+
         private NodeThread(Socket socket) {
             this.socket = socket;
         }
-        
+
         @SuppressWarnings("unchecked")
         @Override
         public void run() {
@@ -144,5 +144,19 @@ public class Node<T extends Serializable> {
             }
         }
     }
-    
+
+    /**
+     * Return the best blockchain.
+     * A blockchain is better than another if it is the only one valid and if its length is bigger.
+     *
+     * @param firstChain
+     *            the first blockchain to compare
+     * @param secondChain
+     *            the second blockchain to compare
+     * @return the best blockchain
+     */
+    private Block<T> getBestChains(Block<T> firstChain, Block<T> secondChain) {
+        return Block.compare(firstChain, secondChain) >= 0 ? firstChain : secondChain;
+    }
+
 }

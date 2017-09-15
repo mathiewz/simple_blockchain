@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @param <T>
  *            The class of the data.
  */
-public class Block<T extends Serializable> implements Iterable<Block<T>>, Serializable {
+public class Block<T extends Serializable> implements Iterable<Block<T>>, Comparable<Block<T>>, Serializable {
     
     private static final long serialVersionUID = 1L;
 
@@ -159,25 +159,16 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Serial
                 .build();
     }
     
-    /**
-     * Return the best blockchain.
-     * A blockchain is better than another if it is the only one valid and if its length is bigger.
-     *
-     * @param firstChain
-     *            the first blockchain to compare
-     * @param secondChain
-     *            the second blockchain to compare
-     * @return the best blockchain
-     */
-    public static <T extends Serializable> Block<T> mergeChains(Block<T> firstChain, Block<T> secondChain) {
-        boolean firstChainValid = firstChain == null ? false : firstChain.isWholeChainValid();
-        boolean secondChainValid = secondChain == null ? false : secondChain.isWholeChainValid();
+    @Override
+    public int compareTo(Block<T> o) {
+        Boolean firstChainValid = this.isWholeChainValid();
+        Boolean secondChainValid = o == null ? false : o.isWholeChainValid();
         if (!firstChainValid || !secondChainValid) {
-            return secondChainValid ? secondChain : firstChain;
+            return Boolean.compare(firstChainValid, secondChainValid);
         }
-        return firstChain.index >= secondChain.index ? firstChain : secondChain;
+        return Integer.compare(this.index, o.index);
     }
-    
+
     private class BlockIterator implements Iterator<Block<T>> {
         
         ListIterator<Block<T>> itr;
@@ -199,6 +190,23 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Serial
             return itr.previous();
         }
         
+    }
+
+    /**
+     * Compare two blocks and return the best one.
+     * A block is better if it is valid and the bigger its index is.
+     *
+     * @param firstChain
+     *            the first blockchain to compare
+     * @param secondChain
+     *            the second blockchain to compare
+     * @return a negative value secondChain is better, a positive value if the firstChain is better, and 0 if it's not possible to determine which is the better chain.
+     */
+    public static <T extends Serializable> int compare(Block<T> firstChain, Block<T> secondChain) {
+        if (firstChain == null) {
+            return secondChain == null ? 0 : -1;
+        }
+        return firstChain.compareTo(secondChain);
     }
     
 }

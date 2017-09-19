@@ -28,6 +28,21 @@ public class Node<T extends Serializable> {
 
     private Block<T> currentBlock;
 
+    /**
+     * Create a new node and connect to another.
+     * The data will be initialized by getting the blockchain of the connected Node.
+     *
+     * @param localPort
+     *            the port where the node can be joined
+     * @param remoteAdress
+     *            the host of the remote node
+     * @param remotePort
+     *            the port of th remote node
+     * @throws IOException
+     *             If the sync to the other node failed
+     * @throws ClassNotFoundException
+     *             If the data send by the other note is not of the same Class that this node.
+     */
     public Node(int localPort, String remoteAdress, int remotePort) throws IOException, ClassNotFoundException {
         this(localPort, null);
         Socket socket = new Socket(remoteAdress, remotePort);
@@ -35,8 +50,17 @@ public class Node<T extends Serializable> {
         ask(socket);
     }
 
+    /**
+     * Create a new node and initialized it with the specified block.
+     * This Node start without any connection to any other node.
+     *
+     * @param port
+     *            the port where the node can be joined
+     * @param firstBlock
+     *            the first block of the chain
+     */
     public Node(int port, Block<T> firstBlock) {
-        LOGGER.info("I run on port {}", port);
+        LOGGER.info("Node started on the port {}", port);
         currentBlock = firstBlock;
         new Thread() {
             @Override
@@ -56,11 +80,31 @@ public class Node<T extends Serializable> {
 
     }
 
+    /**
+     * Add a new Block to the Node.
+     *
+     * @param value
+     *            the value contained in the block
+     * @throws IOException
+     *             If the sending to the other node failed
+     */
     public void addBlock(T value) throws IOException {
         currentBlock = new Block<>(value, currentBlock);
         emit(currentBlock);
     }
 
+    /**
+     * Connect to a new Node.
+     *
+     * @param remoteAdress
+     *            the host of the remote node
+     * @param remotePort
+     *            the port of the remote node
+     * @throws IOException
+     *             If the sync to the other node failed
+     * @throws ClassNotFoundException
+     *             If the data send by the other note is not of the same Class that this node.
+     */
     public void addNode(String remoteAdress, Integer remotePort) throws IOException, ClassNotFoundException {
         Socket socket = new Socket(remoteAdress, remotePort);
         nodes.add(socket);
@@ -112,6 +156,11 @@ public class Node<T extends Serializable> {
         byteArrayOutputStream.close();
     }
 
+    /**
+     * Return the current blockchain in the node.
+     *
+     * @return the current blockchain in the node.
+     */
     public Block<T> getBlockChain() {
         return currentBlock;
     }

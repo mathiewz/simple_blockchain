@@ -66,7 +66,7 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Compar
     /**
      * Return the data contained in the block.
      *
-     * @return
+     * @return the data contained in the block.
      */
     public T getData() {
         return data;
@@ -75,7 +75,7 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Compar
     /**
      * Return the previous block in the chain. If the current block is the first, it return itself.
      *
-     * @return
+     * @return the previous block in the chain. If the current block is the first, it return itself.
      */
     public Block<T> getPrevious() {
         return previous;
@@ -196,6 +196,8 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Compar
      * Compare two blocks and return the best one.
      * A block is better if it is valid and the bigger its index is.
      *
+     * @param <T>
+     *            the data contained in the two blocks
      * @param firstChain
      *            the first blockchain to compare
      * @param secondChain
@@ -209,4 +211,15 @@ public class Block<T extends Serializable> implements Iterable<Block<T>>, Compar
         return firstChain.compareTo(secondChain);
     }
     
+    /**
+     * Check if any block of the chain contains a data.
+     * It uses the method equals of T to check the equality.
+     *
+     * @param object
+     *            the data to check
+     * @return true if any data in the chain is equals to the specified data.
+     */
+    public boolean contains(T object) {
+        return stream().anyMatch(data -> data.equals(object));
+    }
 }

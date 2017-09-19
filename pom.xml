@@ -4,10 +4,10 @@
 
 	<groupId>com.github.mathiewz</groupId>
 	<artifactId>java-blockchain</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>${project.groupId}:${project.artifactId}</name>
+	<name>${project.groupId} :: ${project.artifactId}</name>
 	<description>A simple implementation of blokchain using java socket to communicate</description>
 	<url>https://github.com/mathiewz/simple_blockchain</url>
 

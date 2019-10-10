@@ -1,5 +1,5 @@
 # simple_blockchain [![Build Status](https://travis-ci.org/mathiewz/simple_blockchain.svg?branch=master)](https://travis-ci.org/mathiewz/simple_blockchain)
-A simple implementation of blokchain using java socket to communicate
+A simple implementation of blockchain using java socket to communicate
 The blocks can contain any Object implementing Serializable as data.
 
 ## Communication
